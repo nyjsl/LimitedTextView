@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LimitedTextView">
+
+        <attr name="overflow_str" format="reference|integer|string"/>
+        <attr name="overflow_len" format="integer"/>
+        <attr name="progress_text_visibility" format="enum">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="Themes_LimitedTextView">
+        <attr name="limitedTextViewStyle" format="reference"/>
+    </declare-styleable>
+</resources>

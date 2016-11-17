@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LimitedTextView_Default">
+        <item name="overflow_str">@string/overflow_string_default</item>
+        <item name="overflow_len">0</item>
+    </style>
+
+</resources>
