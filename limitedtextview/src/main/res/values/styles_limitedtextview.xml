@@ -4,6 +4,11 @@
     <style name="LimitedTextView_Default">
         <item name="overflow_str">@string/overflow_string_default</item>
         <item name="overflow_len">0</item>
+        <item name="toexpandhint_str">@string/toexpandhint_string_default</item>
+        <item name="toshrinkhint_str">@string/mtoshrinkhint_string_default</item>
+        <item name="maxlinesonshrink">6</item>
+        <item name="limited_mode">no</item>
+        <item name="shrink_expand_mode">both</item>
     </style>
 
 </resources>

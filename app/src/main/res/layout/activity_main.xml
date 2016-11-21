@@ -8,6 +8,8 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/test_str" />
+        android:text="@string/test_str"
+        app:maxlinesonshrink="5"
+        app:shrink_expand_mode="both"/>
 
 </LinearLayout>

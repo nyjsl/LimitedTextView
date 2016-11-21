@@ -4,9 +4,25 @@
 
         <attr name="overflow_str" format="reference|integer|string"/>
         <attr name="overflow_len" format="integer"/>
-        <attr name="progress_text_visibility" format="enum">
-            <enum name="visible" value="0"/>
-            <enum name="invisible" value="1"/>
+        <attr name="ellipsis_hint_str" format="reference|integer|string"/>
+        <attr name="toexpandhint_str" format="reference|integer|string"/>
+        <attr name="toshrinkhint_str" format="reference|integer|string"/>
+        <attr name="maxlinesonshrink" format="integer"/>
+
+        <attr name="toExpandHintColor" format="reference|color" />
+        <attr name="toShrinkHintColor" format="reference|color" />
+        <attr name="toExpandHintColorBgPressed" format="reference|color" />
+        <attr name="toShrinkHintColorBgPressed" format="reference|color" />
+
+        <attr name="limited_mode" format="enum">
+            <enum name="no" value="0"/> <!--不限制长度-->
+            <enum name="yes" value="1"/> <!--限制长度-->
+        </attr>
+
+        <attr name="shrink_expand_mode" format="enum">
+            <enum name="none" value="0"/> <!--不处理-->
+            <enum name="expand_only" value="1"/> <!--超过长度后收缩,点击展开后展开,展开后不能收缩-->
+            <enum name="both" value="2"/> <!--超过长度后收缩,点击展开后展开,展开后点击收起收起-->
         </attr>
     </declare-styleable>
 

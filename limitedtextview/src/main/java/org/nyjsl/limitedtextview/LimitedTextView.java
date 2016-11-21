@@ -4,16 +4,76 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.text.DynamicLayout;
 import android.text.InputFilter;
+import android.text.Layout;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
+
+import static org.nyjsl.limitedtextview.Clickable.STATE_EXPAND;
+import static org.nyjsl.limitedtextview.Clickable.STATE_SHRINK;
 
 /**
  * Created by pc on 2016/11/17.
  */
 
-public class LimitedTextView extends TextView{
+public class LimitedTextView extends TextView implements SpannableClickListener,Expandable{
+
+
+    public static final int LIMIT_MODE_NO = 0;
+    public static final int LIMIT_MODE_YES = 1;
+
+    private static final int SHRINK_EXPAND_NONE = 0;
+    private static final int SHRINK_EXPAND_EXPAND_ONLY = 1;
+    private static final int SHRINK_EXPAND_BOTH = 2;
+
+    private BufferType mBufferType = BufferType.NORMAL;
+    private TextPaint mTextPaint = null;
+    private Layout mLayout = null;
+    private int mTextLineCount = -1;
+    private int mLayoutWidth = 0;
+    private int mFutureTextViewWidth = 0;
+
+
+    //  the original text of this view
+    private CharSequence mOrigText;
+
+    private String mEllipsisHint = "";
+    private String mToExpandHint = "";
+    private String mToShrinkHint = "";
+    private int mMaxLinesOnShrink = 0;
+
+    private String overFlowStr = "";
+    private int overFlowLength = 0;
+    private LengthInputFilter lengthFilter;
+
+
+
+    private int mToExpandHintColor = 0xFF3498DB;
+    private int mToShrinkHintColor = 0xFFE74C3C;
+    private int mToExpandHintColorBgPressed = 0x55999999;
+    private int mToShrinkHintColorBgPressed = 0x55999999;
+
+
+    private int mCurrState = STATE_SHRINK;
+
+    public void setmCurrState(int mCurrState) {
+        this.mCurrState = mCurrState;
+    }
+
+    private int mLimitMode = 0;
+    private int mShrinkExpandMode = 0;
+
+    private Clickable spannable = null;
+
+    private LinkMovementMethod linkMovementMethod = null;
 
     public LimitedTextView(Context context) {
         this(context,null);
@@ -28,16 +88,30 @@ public class LimitedTextView extends TextView{
         init(context, attrs, defStyleAttr, R.style.LimitedTextView_Default);
     }
 
-
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         readStyle(context, attrs, defStyleAttr, defStyleRes);
         readAttrs(context, attrs, defStyleAttr, defStyleRes);
-        setLengthFilter();
+        setLengthFilter(mLimitMode);
+
+        //TODO 这里可以配置
+        spannable = new TextClickableSpan(mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed,this);
+        linkMovementMethod = new TextTouchLinkMovementMethod();
+        setMovementMethod(linkMovementMethod);
+
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ViewTreeObserver obs = getViewTreeObserver();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    obs.removeOnGlobalLayoutListener(this);
+                } else {
+                    obs.removeGlobalOnLayoutListener(this);
+                }
+                setTextInternal(getShirkOrExpandTextByConfig(), mBufferType);
+            }
+        });
     }
 
-    private LengthInputFilter lengthFilter;
-    private int overFlowLength = 0;
-    private String overFlowStr = "";
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public LimitedTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -48,14 +122,7 @@ public class LimitedTextView extends TextView{
         TypedArray a;
         a = context.obtainStyledAttributes(attrs, R.styleable.LimitedTextView, defStyleAttr, defStyleRes);
         int n = a.getIndexCount();
-        for (int i = 0; i < n; i++) {
-            int attr = a.getIndex(i);
-            if(attr == R.styleable.LimitedTextView_overflow_len){
-                overFlowLength = a.getInt(attr,0);
-            }else if (attr == R.styleable.LimitedTextView_overflow_str){
-                overFlowStr = a.getString(attr);
-            }
-        }
+        getAttrsByType(a, n);
         a.recycle();
     }
 
@@ -68,28 +135,185 @@ public class LimitedTextView extends TextView{
             appearance = context.obtainStyledAttributes(ap, R.styleable.LimitedTextView);
             if(appearance != null){
                 int n = appearance.getIndexCount();
-                for (int i = 0; i < n; i++) {
-                    int attr = appearance.getIndex(i);
-                    if(attr == R.styleable.LimitedTextView_overflow_len){
-                        overFlowLength = appearance.getInt(attr,0);
-                    }else if (attr == R.styleable.LimitedTextView_overflow_str){
-                        overFlowStr = appearance.getString(attr);
-                    }
-                }
+                getAttrsByType(appearance, n);
             }
             appearance.recycle();
         }
     }
 
-
-    public void setLengthFilter(){
-        if(overFlowLength>0){
-            if(TextUtils.isEmpty(overFlowStr)){
-                overFlowStr = getContext().getString(R.string.overflow_string_default);
+    private void getAttrsByType(TypedArray a, int n) {
+        for (int i = 0; i < n; i++) {
+            int attr = a.getIndex(i);
+            if(attr == R.styleable.LimitedTextView_overflow_len){
+                overFlowLength = a.getInt(attr,0);
+            }else if (attr == R.styleable.LimitedTextView_overflow_str){
+                overFlowStr = a.getString(attr);
+            }else if (attr == R.styleable.LimitedTextView_ellipsis_hint_str){
+                mEllipsisHint = a.getString(attr);
+            }else if (attr == R.styleable.LimitedTextView_toexpandhint_str){
+                mToExpandHint = a.getString(attr);
+            }else if (attr == R.styleable.LimitedTextView_toshrinkhint_str){
+                mToShrinkHint = a.getString(attr);
+            }else if (attr == R.styleable.LimitedTextView_maxlinesonshrink){
+                mMaxLinesOnShrink = a.getInt(attr,0);
+            }else if (attr == R.styleable.LimitedTextView_limited_mode){
+                mLimitMode = a.getInt(attr,LIMIT_MODE_NO);
+            }else if (attr == R.styleable.LimitedTextView_shrink_expand_mode){
+                mShrinkExpandMode = a.getInt(attr,SHRINK_EXPAND_NONE);
+            }else if (attr == R.styleable.LimitedTextView_toExpandHintColor){
+                mToExpandHintColor = a.getColor(attr,0xFF3498DB);
+            }else if (attr == R.styleable.LimitedTextView_toShrinkHintColor){
+                mToShrinkHintColor = a.getColor(attr,0xFFE74C3C);
+            }else if (attr == R.styleable.LimitedTextView_toExpandHintColorBgPressed){
+                mToExpandHintColorBgPressed = a.getColor(attr,0x55999999);
+            }else if (attr == R.styleable.LimitedTextView_toShrinkHintColorBgPressed){
+                mToShrinkHintColorBgPressed = a.getColor(attr,0x55999999);
             }
-            lengthFilter = new LengthInputFilter(overFlowLength,overFlowStr);
-            this.setFilters(new InputFilter[]{lengthFilter});
-            setText(getText());
         }
+    }
+
+    /**
+     *设置是否限制长度
+     * @param mode LIMIT_MODE_YES  LIMIT_MODE_NO
+     */
+    public void setLengthFilter(int mode){
+        if(mLimitMode == LIMIT_MODE_YES){
+            if(overFlowLength>0){
+                if(TextUtils.isEmpty(overFlowStr)){
+                    overFlowStr = getContext().getString(R.string.overflow_string_default);
+                }
+                lengthFilter = new LengthInputFilter(overFlowLength,overFlowStr);
+                this.setFilters(new InputFilter[]{lengthFilter});
+
+            }
+        }else if (mLimitMode == LIMIT_MODE_NO){
+            this.setFilters(new InputFilter[0]);
+        }else{
+            return;
+        }
+        setText(mOrigText);
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        mOrigText = text;
+        mBufferType = type;
+        setTextInternal(getShirkOrExpandTextByConfig(),type);
+    }
+
+    private void setTextInternal(CharSequence text,BufferType type) {
+        super.setText(text, type);
+    }
+
+    private CharSequence getShirkOrExpandTextByConfig(){
+        if(mShrinkExpandMode == SHRINK_EXPAND_NONE){
+            return mOrigText;
+        }else if(mShrinkExpandMode == SHRINK_EXPAND_BOTH){
+            return getNewTextByConfig();
+        }else if(mShrinkExpandMode == SHRINK_EXPAND_EXPAND_ONLY){
+            return getNewTextByConfig();
+        }else{
+            return mOrigText;
+        }
+    }
+
+    private CharSequence getNewTextByConfig(){
+        if(TextUtils.isEmpty(mOrigText)){
+            return mOrigText;
+        }
+
+        mLayout = getLayout();
+        if(mLayout != null){
+            mLayoutWidth = mLayout.getWidth();
+        }
+
+        if(mLayoutWidth <= 0){
+            if(getWidth() == 0) {
+                if (mFutureTextViewWidth == 0) {
+                    return mOrigText;
+                } else {
+                    mLayoutWidth = mFutureTextViewWidth - getPaddingLeft() - getPaddingRight();
+                }
+            }else{
+                mLayoutWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+            }
+        }
+
+        mTextPaint = getPaint();
+
+        mTextLineCount = -1;
+        switch (mCurrState){
+            case STATE_SHRINK: {
+                mLayout = new DynamicLayout(mOrigText, mTextPaint, mLayoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                mTextLineCount = mLayout.getLineCount();
+
+                if (mTextLineCount <= mMaxLinesOnShrink) {
+                    return mOrigText;
+                }
+                Layout layout = getValidLayout();
+                int start = layout.getLineStart(mMaxLinesOnShrink - 1);
+                int end = layout.getLineEnd(mMaxLinesOnShrink - 1) - start;
+                CharSequence content = mOrigText.subSequence(start, mOrigText.length());
+                float moreWidth = mTextPaint.measureText(getContentOfString(mEllipsisHint) + getContentOfString(mToExpandHint)) ;
+                float maxWidth = layout.getWidth() - moreWidth;
+                int len = getPaint().breakText(content, 0, content.length(), true, maxWidth, null);
+                if (content.charAt(end - 1) == '\n') {
+                    end = end - 1;
+                }
+                len = Math.min(len, end);
+                String fixText = mOrigText.subSequence(0, start+len).toString();
+                SpannableStringBuilder ssbShrink = new SpannableStringBuilder(fixText).append(mEllipsisHint);
+                ssbShrink.append(getContentOfString(mToExpandHint));
+                ssbShrink.setSpan(spannable, ssbShrink.length() - getLengthOfString(mToExpandHint), ssbShrink.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return ssbShrink;
+            }
+            case STATE_EXPAND: {
+                mLayout = new DynamicLayout(mOrigText, mTextPaint, mLayoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                mTextLineCount = mLayout.getLineCount();
+                if (mTextLineCount <= mMaxLinesOnShrink) {
+                    return mOrigText;
+                }
+                SpannableStringBuilder ssbExpand = new SpannableStringBuilder(mOrigText).append(mToShrinkHint);
+                ssbExpand.setSpan(spannable, ssbExpand.length() - getLengthOfString(mToShrinkHint), ssbExpand.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return ssbExpand;
+            }
+        }
+        return mOrigText;
+    }
+
+    private Layout getValidLayout(){
+        return mLayout != null ? mLayout : getLayout();
+    }
+
+
+    private int getLengthOfString(String string){
+        if(string == null)
+            return 0;
+        return string.length();
+    }
+
+    private String getContentOfString(String string){
+        if(string == null)
+            return "";
+        return string;
+    }
+
+    @Override
+    public void onClick(Clickable clickable) {
+       toggle(clickable);
+    }
+
+    private void toggle(Clickable clickable){
+        setTextInternal(getShirkOrExpandTextByConfig(), mBufferType);
+    }
+
+    @Override
+    public void onExpand(View view) {
+        //TODO
+    }
+
+    @Override
+    public void onShrink(View view) {
+        //TODO
     }
 }
