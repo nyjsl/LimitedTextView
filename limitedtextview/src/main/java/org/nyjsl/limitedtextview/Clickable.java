@@ -15,5 +15,6 @@ public interface Clickable {
 
     void onClick(View view);
 
-    void togle(View view);
+    void toggle(View view);
+
 }

@@ -24,7 +24,7 @@ import static org.nyjsl.limitedtextview.Clickable.STATE_SHRINK;
  * Created by pc on 2016/11/17.
  */
 
-public class LimitedTextView extends TextView implements SpannableClickListener,Expandable{
+public class LimitedTextView extends TextView implements Expandable,Toggable{
 
 
     public static final int LIMIT_MODE_NO = 0;
@@ -75,7 +75,7 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
     private int mLimitMode = 0;
     private int mShrinkExpandMode = 0;
 
-    private Clickable spannable = null;
+    private SpannableInterface spannable = null;
 
     public Expandable getExpandable() {
         return expandable;
@@ -104,7 +104,7 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
         setLengthFilter(mLimitMode);
 
         //TODO 这里可以配置
-        spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed,this);
+        spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
         linkMovementMethod = new TextTouchLinkMovementMethod();
         setMovementMethod(linkMovementMethod);
 
@@ -321,15 +321,6 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
     }
 
     @Override
-    public void onClick(Clickable clickable) {
-       toggle(clickable);
-    }
-
-    private void toggle(Clickable clickable){
-        setTextInternal(getShirkOrExpandTextByConfig(), mBufferType);
-    }
-
-    @Override
     public void onExpand(View view) {
         if(null != expandable){
             expandable.onExpand(view);
@@ -341,5 +332,10 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
         if(null != expandable){
             expandable.onShrink(view);
         }
+    }
+
+    @Override
+    public void toggle() {
+        setTextInternal(getShirkOrExpandTextByConfig(), mBufferType);
     }
 }

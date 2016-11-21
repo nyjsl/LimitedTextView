@@ -1,9 +1,11 @@
 package org.nyjsl.limitedtextview;
 
 import android.text.TextPaint;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 
-public class TextClickableSpan extends TogglableSpan{
+public class TextClickableSpan extends ClickableSpan implements SpannableInterface{
 
     private static final int STATE_SHRINK = 0;
     private static final int STATE_EXPAND = 1;
@@ -18,32 +20,28 @@ public class TextClickableSpan extends TogglableSpan{
     private int mToExpandHintColorBgPressed = 0x55999999;
     private int mToShrinkHintColorBgPressed = 0x55999999;
 
-    private SpannableClickListener listener = null;
+    private ClickImpl clickable  = null;
 
-    public TextClickableSpan(int mode,int mToExpandHintColor, int mToShrinkHintColor, int mToExpandHintColorBgPressed, int mToShrinkHintColorBgPressed,SpannableClickListener listener) {
-        this.mode = mode;
+    public TextClickableSpan(int mode,int mToExpandHintColor, int mToShrinkHintColor, int mToExpandHintColorBgPressed, int mToShrinkHintColorBgPressed) {
+        clickable = getClickable(0,mode);
         this.mToExpandHintColor = mToExpandHintColor;
         this.mToShrinkHintColor = mToShrinkHintColor;
         this.mToExpandHintColorBgPressed = mToExpandHintColorBgPressed;
         this.mToShrinkHintColorBgPressed = mToShrinkHintColorBgPressed;
-        this.listener = listener;
     }
 
 
 
     @Override
     public void onClick(View widget) {
-        if(widget instanceof LimitedTextView){
-            LimitedTextView view = (LimitedTextView) widget;
-            togle(view);
-        }
-        listener.onClick(this);
+        Log.e("tag","onClick");
+        clickable.onClick(widget);
     }
 
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
-        switch (mCurrState){
+        switch (clickable.getmCurrState()){
             case STATE_SHRINK:
                 ds.setColor(mToExpandHintColor);
                 ds.bgColor = mIsPressed ? mToExpandHintColorBgPressed : 0;
@@ -54,5 +52,11 @@ public class TextClickableSpan extends TogglableSpan{
                 break;
         }
         ds.setUnderlineText(false);
+    }
+
+
+    @Override
+    public ClickImpl getClickable(int status, int mode) {
+        return new ClickImpl(status,mode);
     }
 }
