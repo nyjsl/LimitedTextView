@@ -1,10 +1,9 @@
 package org.nyjsl.limitedtextview;
 
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.view.View;
 
-public class TextClickableSpan extends ClickableSpan implements Clickable {
+public class TextClickableSpan extends TogglableSpan{
 
     private static final int STATE_SHRINK = 0;
     private static final int STATE_EXPAND = 1;
@@ -14,8 +13,6 @@ public class TextClickableSpan extends ClickableSpan implements Clickable {
         mIsPressed = isSelected;
     }
 
-    private int mCurrState = 0;
-
     private int mToExpandHintColor = 0xFF3498DB;
     private int mToShrinkHintColor = 0xFFE74C3C;
     private int mToExpandHintColorBgPressed = 0x55999999;
@@ -23,7 +20,8 @@ public class TextClickableSpan extends ClickableSpan implements Clickable {
 
     private SpannableClickListener listener = null;
 
-    public TextClickableSpan(int mToExpandHintColor, int mToShrinkHintColor, int mToExpandHintColorBgPressed, int mToShrinkHintColorBgPressed,SpannableClickListener listener) {
+    public TextClickableSpan(int mode,int mToExpandHintColor, int mToShrinkHintColor, int mToExpandHintColorBgPressed, int mToShrinkHintColorBgPressed,SpannableClickListener listener) {
+        this.mode = mode;
         this.mToExpandHintColor = mToExpandHintColor;
         this.mToShrinkHintColor = mToShrinkHintColor;
         this.mToExpandHintColorBgPressed = mToExpandHintColorBgPressed;
@@ -31,29 +29,7 @@ public class TextClickableSpan extends ClickableSpan implements Clickable {
         this.listener = listener;
     }
 
-    @Override
-    public void togle(View view) {
-        switch (mCurrState){
-            case STATE_SHRINK:
-                mCurrState = STATE_EXPAND;
-                if(view instanceof Expandable){
-                    Expandable exp = (Expandable) view;
-                    exp.onExpand(view);
-                }
-                break;
-            case STATE_EXPAND:
-                mCurrState = STATE_SHRINK;
-                if(view instanceof Expandable){
-                Expandable exp = (Expandable) view;
-                exp.onShrink(view);
-            }
-                break;
-        }
-        if(view instanceof LimitedTextView){
-            LimitedTextView ltv = (LimitedTextView) view;
-            ltv.setmCurrState(mCurrState);
-        }
-    }
+
 
     @Override
     public void onClick(View widget) {

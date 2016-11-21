@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/test_str"
-        app:maxlinesonshrink="5"
-        app:shrink_expand_mode="both"/>
+        app:maxlinesonshrink="6"/>
 
 </LinearLayout>

@@ -49,6 +49,10 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
     private String mToExpandHint = "";
     private String mToShrinkHint = "";
     private int mMaxLinesOnShrink = 0;
+    /**
+     * 默认展开和文本之间增加一个间距
+     */
+    private String mGapText = " ";
 
     private String overFlowStr = "";
     private int overFlowLength = 0;
@@ -73,6 +77,12 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
 
     private Clickable spannable = null;
 
+    public Expandable getExpandable() {
+        return expandable;
+    }
+
+    private Expandable expandable = null;
+
     private LinkMovementMethod linkMovementMethod = null;
 
     public LimitedTextView(Context context) {
@@ -94,7 +104,7 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
         setLengthFilter(mLimitMode);
 
         //TODO 这里可以配置
-        spannable = new TextClickableSpan(mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed,this);
+        spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed,this);
         linkMovementMethod = new TextTouchLinkMovementMethod();
         setMovementMethod(linkMovementMethod);
 
@@ -194,6 +204,11 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
         setText(mOrigText);
     }
 
+
+    public void setExpandListener(Expandable expandable){
+        this.expandable = expandable;
+    }
+
     @Override
     public void setText(CharSequence text, BufferType type) {
         mOrigText = text;
@@ -219,6 +234,10 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
 
     private CharSequence getNewTextByConfig(){
         if(TextUtils.isEmpty(mOrigText)){
+            return mOrigText;
+        }
+
+        if(mShrinkExpandMode == SHRINK_EXPAND_NONE){
             return mOrigText;
         }
 
@@ -254,7 +273,7 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
                 int start = layout.getLineStart(mMaxLinesOnShrink - 1);
                 int end = layout.getLineEnd(mMaxLinesOnShrink - 1) - start;
                 CharSequence content = mOrigText.subSequence(start, mOrigText.length());
-                float moreWidth = mTextPaint.measureText(getContentOfString(mEllipsisHint) + getContentOfString(mToExpandHint)) ;
+                float moreWidth = mTextPaint.measureText(getContentOfString(mEllipsisHint) + getContentOfString(mToExpandHint) + getLengthOfString(mGapText)) ;
                 float maxWidth = layout.getWidth() - moreWidth;
                 int len = getPaint().breakText(content, 0, content.length(), true, maxWidth, null);
                 if (content.charAt(end - 1) == '\n') {
@@ -263,17 +282,20 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
                 len = Math.min(len, end);
                 String fixText = mOrigText.subSequence(0, start+len).toString();
                 SpannableStringBuilder ssbShrink = new SpannableStringBuilder(fixText).append(mEllipsisHint);
-                ssbShrink.append(getContentOfString(mToExpandHint));
+                ssbShrink.append(getContentOfString(mGapText)+getContentOfString(mToExpandHint));
                 ssbShrink.setSpan(spannable, ssbShrink.length() - getLengthOfString(mToExpandHint), ssbShrink.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return ssbShrink;
             }
             case STATE_EXPAND: {
+                if(mShrinkExpandMode == SHRINK_EXPAND_EXPAND_ONLY){
+                    return mOrigText;
+                }
                 mLayout = new DynamicLayout(mOrigText, mTextPaint, mLayoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
                 mTextLineCount = mLayout.getLineCount();
                 if (mTextLineCount <= mMaxLinesOnShrink) {
                     return mOrigText;
                 }
-                SpannableStringBuilder ssbExpand = new SpannableStringBuilder(mOrigText).append(mToShrinkHint);
+                SpannableStringBuilder ssbExpand = new SpannableStringBuilder(mOrigText).append(mGapText).append(mToShrinkHint);
                 ssbExpand.setSpan(spannable, ssbExpand.length() - getLengthOfString(mToShrinkHint), ssbExpand.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return ssbExpand;
             }
@@ -309,11 +331,15 @@ public class LimitedTextView extends TextView implements SpannableClickListener,
 
     @Override
     public void onExpand(View view) {
-        //TODO
+        if(null != expandable){
+            expandable.onExpand(view);
+        }
     }
 
     @Override
     public void onShrink(View view) {
-        //TODO
+        if(null != expandable){
+            expandable.onShrink(view);
+        }
     }
 }
