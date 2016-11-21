@@ -1,4 +1,4 @@
-package org.nyjsl.limitedtextview;
+package org.nyjsl.limitedtextview.linkmovmentmethod;
 
 import android.text.Layout;
 import android.text.Spannable;

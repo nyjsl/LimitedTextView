@@ -1,11 +1,14 @@
-package org.nyjsl.limitedtextview;
+package org.nyjsl.limitedtextview.spannable;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.style.ImageSpan;
 
-public class ImageClickableSpan extends ImageSpan implements SpannableInterface{
+import org.nyjsl.limitedtextview.ClickImpl;
+import org.nyjsl.limitedtextview.interfaces.SpannableInterface;
+
+public class ImageClickableSpan extends ImageSpan implements SpannableInterface {
 
     public ClickImpl getClickable() {
         return clickable;

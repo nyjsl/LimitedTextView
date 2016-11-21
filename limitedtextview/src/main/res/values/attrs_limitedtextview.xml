@@ -24,6 +24,12 @@
             <enum name="expand_only" value="1"/> <!--超过长度后收缩,点击展开后展开,展开后不能收缩-->
             <enum name="both" value="2"/> <!--超过长度后收缩,点击展开后展开,展开后点击收起收起-->
         </attr>
+
+        <attr name = "overflow_mode" format="enum">
+            <enum name="text" value="0"/> <!--不处理-->
+            <enum name="drawable" value="1"/> <!--超过长度后收缩,点击展开后展开,展开后不能收缩-->
+
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="Themes_LimitedTextView">

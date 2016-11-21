@@ -1,4 +1,4 @@
-package org.nyjsl.limitedtextview;
+package org.nyjsl.limitedtextview.interfaces;
 
 import android.view.View;
 

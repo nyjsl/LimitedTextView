@@ -1,9 +1,11 @@
-package org.nyjsl.limitedtextview;
+package org.nyjsl.limitedtextview.linkmovmentmethod;
 
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.MotionEvent;
 import android.widget.TextView;
+
+import org.nyjsl.limitedtextview.spannable.TextClickableSpan;
 
 public class TextTouchLinkMovementMethod extends GenericLinkeMovmentMethod<TextClickableSpan> {
 

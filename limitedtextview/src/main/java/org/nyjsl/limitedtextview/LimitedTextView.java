@@ -17,14 +17,20 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
-import static org.nyjsl.limitedtextview.Clickable.STATE_EXPAND;
-import static org.nyjsl.limitedtextview.Clickable.STATE_SHRINK;
+import org.nyjsl.limitedtextview.interfaces.Expandable;
+import org.nyjsl.limitedtextview.interfaces.SpannableInterface;
+import org.nyjsl.limitedtextview.interfaces.Toggable;
+import org.nyjsl.limitedtextview.linkmovmentmethod.TextTouchLinkMovementMethod;
+import org.nyjsl.limitedtextview.spannable.TextClickableSpan;
+
+import static org.nyjsl.limitedtextview.interfaces.Clickable.STATE_EXPAND;
+import static org.nyjsl.limitedtextview.interfaces.Clickable.STATE_SHRINK;
 
 /**
  * Created by pc on 2016/11/17.
  */
 
-public class LimitedTextView extends TextView implements Expandable,Toggable{
+public class LimitedTextView extends TextView implements Expandable,Toggable {
 
 
     public static final int LIMIT_MODE_NO = 0;
@@ -58,12 +64,15 @@ public class LimitedTextView extends TextView implements Expandable,Toggable{
     private int overFlowLength = 0;
     private LengthInputFilter lengthFilter;
 
-
-
     private int mToExpandHintColor = 0xFF3498DB;
     private int mToShrinkHintColor = 0xFFE74C3C;
     private int mToExpandHintColorBgPressed = 0x55999999;
     private int mToShrinkHintColorBgPressed = 0x55999999;
+
+    private int mOverflowMode = OVERFLOW_MODE_TEXT;
+
+    private static final int OVERFLOW_MODE_TEXT = 0;
+    private static final int OVERFLOW_MODE_DRAWABLE = 1;
 
 
     private int mCurrState = STATE_SHRINK;
@@ -74,7 +83,6 @@ public class LimitedTextView extends TextView implements Expandable,Toggable{
 
     private int mLimitMode = 0;
     private int mShrinkExpandMode = 0;
-
     private SpannableInterface spannable = null;
 
     public Expandable getExpandable() {
@@ -103,10 +111,16 @@ public class LimitedTextView extends TextView implements Expandable,Toggable{
         readAttrs(context, attrs, defStyleAttr, defStyleRes);
         setLengthFilter(mLimitMode);
 
-        //TODO 这里可以配置
-        spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
-        linkMovementMethod = new TextTouchLinkMovementMethod();
+        if(mOverflowMode == OVERFLOW_MODE_TEXT){
+            spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
+            linkMovementMethod = new TextTouchLinkMovementMethod();
+        }else if (mOverflowMode == OVERFLOW_MODE_DRAWABLE){
+//            TODO
+//            spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
+//            linkMovementMethod = new TextTouchLinkMovementMethod();
+        }
         setMovementMethod(linkMovementMethod);
+
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -178,6 +192,8 @@ public class LimitedTextView extends TextView implements Expandable,Toggable{
                 mToExpandHintColorBgPressed = a.getColor(attr,0x55999999);
             }else if (attr == R.styleable.LimitedTextView_toShrinkHintColorBgPressed){
                 mToShrinkHintColorBgPressed = a.getColor(attr,0x55999999);
+            }else if(attr == R.styleable.LimitedTextView_overflow_mode){
+                mOverflowMode = a.getInt(attr,0);
             }
         }
     }

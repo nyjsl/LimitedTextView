@@ -1,11 +1,14 @@
-package org.nyjsl.limitedtextview;
+package org.nyjsl.limitedtextview.spannable;
 
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 
-public class TextClickableSpan extends ClickableSpan implements SpannableInterface{
+import org.nyjsl.limitedtextview.ClickImpl;
+import org.nyjsl.limitedtextview.interfaces.SpannableInterface;
+
+public class TextClickableSpan extends ClickableSpan implements SpannableInterface {
 
     private static final int STATE_SHRINK = 0;
     private static final int STATE_EXPAND = 1;

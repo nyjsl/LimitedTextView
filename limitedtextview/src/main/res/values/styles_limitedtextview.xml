@@ -8,7 +8,8 @@
         <item name="toshrinkhint_str">@string/mtoshrinkhint_string_default</item>
         <item name="maxlinesonshrink">6</item>
         <item name="limited_mode">no</item>
-        <item name="shrink_expand_mode">expand_only</item>
+        <item name="shrink_expand_mode">both</item>
+        <item name="overflow_mode">text</item>
     </style>
 
 </resources>

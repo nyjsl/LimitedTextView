@@ -2,11 +2,15 @@ package org.nyjsl.limitedtextview;
 
 import android.view.View;
 
+import org.nyjsl.limitedtextview.interfaces.Clickable;
+import org.nyjsl.limitedtextview.interfaces.Expandable;
+import org.nyjsl.limitedtextview.interfaces.Toggable;
+
 /**
  * Created by pc on 2016/11/21.
  */
 
-public class ClickImpl implements Clickable{
+public class ClickImpl implements Clickable {
 
 
     public ClickImpl(int mCurrState, int mode) {
