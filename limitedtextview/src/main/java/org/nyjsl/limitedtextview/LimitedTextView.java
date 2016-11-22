@@ -268,6 +268,12 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
         setTextInternal(getShirkOrExpandTextByConfig(),type);
     }
 
+    public void updateForRecyclerView(CharSequence text, int futureTextViewWidth, int expandState){
+        mFutureTextViewWidth = futureTextViewWidth;
+        mCurrState = expandState;
+        setText(text);
+    }
+
     private void setTextInternal(CharSequence text,BufferType type) {
         super.setText(text, type);
     }
