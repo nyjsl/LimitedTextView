@@ -14,8 +14,8 @@ public class ImageTouchMovementMethod extends GenericLinkeMovmentMethod<ImageCli
 
         if (action == MotionEvent.ACTION_UP ||action == MotionEvent.ACTION_DOWN) {
 
-            ImageClickableSpan clickableImageSpan= getPressedSpan(textView,spannable,event,ImageClickableSpan.class);
-            if (null != clickableImageSpan) {
+            mPressedSpan = getPressedSpan(textView,spannable,event,ImageClickableSpan.class);
+            if (null != mPressedSpan) {
                 if (action == MotionEvent.ACTION_UP) {
                     mPressedSpan.getClickable().onClick(textView);
                 }

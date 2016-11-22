@@ -10,6 +10,8 @@
         <item name="limited_mode">no</item>
         <item name="shrink_expand_mode">both</item>
         <item name="overflow_mode">text</item>
+        <item name="overflow_drawable">@drawable/default_expand_drawable</item>
+        <item name="overflow_drawable_textSize">13sp</item>
     </style>
 
 </resources>

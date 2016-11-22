@@ -2,7 +2,6 @@ package org.nyjsl.limitedtextview.spannable;
 
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 
 import org.nyjsl.limitedtextview.ClickImpl;
@@ -37,7 +36,6 @@ public class TextClickableSpan extends ClickableSpan implements SpannableInterfa
 
     @Override
     public void onClick(View widget) {
-        Log.e("tag","onClick");
         clickable.onClick(widget);
     }
 

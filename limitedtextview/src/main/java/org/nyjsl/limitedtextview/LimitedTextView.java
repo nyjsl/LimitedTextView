@@ -3,7 +3,9 @@ package org.nyjsl.limitedtextview;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.text.DynamicLayout;
 import android.text.InputFilter;
 import android.text.Layout;
@@ -20,7 +22,9 @@ import android.widget.TextView;
 import org.nyjsl.limitedtextview.interfaces.Expandable;
 import org.nyjsl.limitedtextview.interfaces.SpannableInterface;
 import org.nyjsl.limitedtextview.interfaces.Toggable;
+import org.nyjsl.limitedtextview.linkmovmentmethod.ImageTouchMovementMethod;
 import org.nyjsl.limitedtextview.linkmovmentmethod.TextTouchLinkMovementMethod;
+import org.nyjsl.limitedtextview.spannable.ImageClickableSpan;
 import org.nyjsl.limitedtextview.spannable.TextClickableSpan;
 
 import static org.nyjsl.limitedtextview.interfaces.Clickable.STATE_EXPAND;
@@ -74,6 +78,26 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
     private static final int OVERFLOW_MODE_TEXT = 0;
     private static final int OVERFLOW_MODE_DRAWABLE = 1;
 
+    private Drawable mExpandDrwable = null;
+
+    private int mOverflowDrawableTextSize = DEFAULT_OVERFLOWRAWABLTEXTSIZE;
+    /**
+     * 默认展开文本的大小
+     */
+    private static final int DEFAULT_OVERFLOWRAWABLTEXTSIZE = 13;
+
+    private int mOverflowDrawableTextColor = DEFAULT_OVERFLOWDRAWABLTEXTCOLOR;
+    /**
+     * 默认展开文本的颜色
+     */
+    private static final int DEFAULT_OVERFLOWDRAWABLTEXTCOLOR = 0;
+
+    private int mOverflowDrawableExtraPadding = DEFAULT_OVERFLOWDRAWABLEXTRAPADDING;
+    /**
+     * 默认文本到边框的左右边距
+     */
+    private static final int DEFAULT_OVERFLOWDRAWABLEXTRAPADDING = 5;
+
 
     private int mCurrState = STATE_SHRINK;
 
@@ -115,9 +139,8 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
             spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
             linkMovementMethod = new TextTouchLinkMovementMethod();
         }else if (mOverflowMode == OVERFLOW_MODE_DRAWABLE){
-//            TODO
-//            spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
-//            linkMovementMethod = new TextTouchLinkMovementMethod();
+            spannable = new ImageClickableSpan(mOverflowDrawableTextColor,mOverflowDrawableExtraPadding,mOverflowDrawableTextSize,this,mExpandDrwable,mShrinkExpandMode);
+            linkMovementMethod = new ImageTouchMovementMethod();
         }
         setMovementMethod(linkMovementMethod);
 
@@ -194,8 +217,21 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
                 mToShrinkHintColorBgPressed = a.getColor(attr,0x55999999);
             }else if(attr == R.styleable.LimitedTextView_overflow_mode){
                 mOverflowMode = a.getInt(attr,0);
+            }else if (attr == R.styleable.LimitedTextView_overflow_drawable){
+                mExpandDrwable = a.getDrawable(attr);
+            }else if (attr == R.styleable.LimitedTextView_overflow_drawable_textSize){
+                mOverflowDrawableTextSize = a.getDimensionPixelSize(attr, DEFAULT_OVERFLOWRAWABLTEXTSIZE);
+            }else if (attr == R.styleable.LimitedTextView_overflow_drawable_textColor){
+                mOverflowDrawableTextColor = a.getColor(attr, DEFAULT_OVERFLOWDRAWABLTEXTCOLOR);
+            }else if (attr == R.styleable.LimitedTextView_overflow_drawable_extrapadding){
+                mOverflowDrawableExtraPadding = a.getDimensionPixelSize(attr, DEFAULT_OVERFLOWDRAWABLEXTRAPADDING);
             }
         }
+
+        if(null == mExpandDrwable){
+            mExpandDrwable = ContextCompat.getDrawable(getContext(),R.drawable.default_expand_drawable);
+        }
+        mExpandDrwable.setBounds(0, 0, mExpandDrwable.getIntrinsicWidth(), mExpandDrwable.getIntrinsicHeight());
     }
 
     /**
