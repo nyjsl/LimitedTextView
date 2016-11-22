@@ -37,7 +37,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.+'
 }
 
-version = "1.0.0"
+version = "1.0.1"
 group = "org.nyjsl.limitedtextview"
 // 根节点添加
 def siteUrl = 'https://github.com/nyjsl/LimitedTextView'    // project homepage
@@ -86,6 +86,11 @@ task javadoc(type: Javadoc) {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
 javadoc {
     options {
         encoding "UTF-8"
@@ -94,11 +99,6 @@ javadoc {
         version true
         links "http://docs.oracle.com/javase/7/docs/api"
     }
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
 }
 
 
