@@ -239,6 +239,7 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
      * @param mode LIMIT_MODE_YES  LIMIT_MODE_NO
      */
     public void setLengthFilter(int mode){
+        mLimitMode = mode;
         if(mLimitMode == LIMIT_MODE_YES){
             if(overFlowLength>0){
                 if(TextUtils.isEmpty(overFlowStr)){
