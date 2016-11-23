@@ -37,7 +37,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.+'
 }
 
-version = "1.0.3"
+version = "1.0.4"
 group = "org.nyjsl.limitedtextview"
 // 根节点添加
 def siteUrl = 'https://github.com/nyjsl/LimitedTextView'    // project homepage
