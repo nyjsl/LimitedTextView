@@ -27,9 +27,6 @@ import org.nyjsl.limitedtextview.linkmovmentmethod.TextTouchLinkMovementMethod;
 import org.nyjsl.limitedtextview.spannable.ImageClickableSpan;
 import org.nyjsl.limitedtextview.spannable.TextClickableSpan;
 
-import static org.nyjsl.limitedtextview.interfaces.Clickable.STATE_EXPAND;
-import static org.nyjsl.limitedtextview.interfaces.Clickable.STATE_SHRINK;
-
 /**
  * Created by pc on 2016/11/17.
  */
@@ -98,6 +95,10 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
      */
     private static final int DEFAULT_OVERFLOWDRAWABLEXTRAPADDING = 5;
 
+
+    public int getmCurrState() {
+        return mCurrState;
+    }
 
     private int mCurrState = STATE_SHRINK;
 

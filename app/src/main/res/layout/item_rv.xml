@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <org.nyjsl.limitedtextview.LimitedTextView
+        android:id="@+id/ltv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shrink_expand_mode="both"
+        app:overflow_mode="drawable"
+        app:overflow_drawable_textSize="15sp"
+        android:textSize="16sp"
+        app:overflow_drawable_textColor="#aaa"
+        app:maxlinesonshrink="4"
+        />
+</LinearLayout>

@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <org.nyjsl.limitedtextview.LimitedTextView
-        android:id="@+id/text"
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/test_str"
-        app:maxlinesonshrink="6"
-        app:overflow_mode="drawable"
-        app:overflow_drawable_textColor="@android:color/black"
-        app:shrink_expand_mode="expand_only"
-        />
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager">
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
