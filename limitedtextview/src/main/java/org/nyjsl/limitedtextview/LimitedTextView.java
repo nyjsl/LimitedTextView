@@ -140,7 +140,7 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
             spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
             linkMovementMethod = new TextTouchLinkMovementMethod();
         }else if (mOverflowMode == OVERFLOW_MODE_DRAWABLE){
-            spannable = new ImageClickableSpan(mOverflowDrawableTextColor,mOverflowDrawableExtraPadding,mOverflowDrawableTextSize,this,mExpandDrwable,mShrinkExpandMode);
+            spannable = new ImageClickableSpan(mOverflowDrawableTextColor,mOverflowDrawableExtraPadding,mOverflowDrawableTextSize,mExpandDrwable,mShrinkExpandMode);
             linkMovementMethod = new ImageTouchMovementMethod();
         }
         setMovementMethod(linkMovementMethod);

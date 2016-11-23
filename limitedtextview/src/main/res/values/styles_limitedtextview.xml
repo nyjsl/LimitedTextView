@@ -6,12 +6,14 @@
         <item name="overflow_len">0</item>
         <item name="toexpandhint_str">@string/toexpandhint_string_default</item>
         <item name="toshrinkhint_str">@string/toshrinkhint_string_default</item>
+        <item name="ellipsis_hint_str">@string/ellipsis_hint_string_default</item>
         <item name="maxlinesonshrink">6</item>
         <item name="limited_mode">no</item>
         <item name="shrink_expand_mode">both</item>
         <item name="overflow_mode">text</item>
         <item name="overflow_drawable">@drawable/default_expand_drawable</item>
         <item name="overflow_drawable_textSize">13sp</item>
+        <item name="overflow_drawable_textColor">#666666</item>
     </style>
 
 </resources>

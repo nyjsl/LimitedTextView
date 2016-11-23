@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
     <string name="overflow_string_default">&#8230;</string>
     <string name="ellipsis_hint_string_default">&#8230;</string>
     <string name="toexpandhint_string_default">展开</string>

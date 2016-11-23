@@ -3,14 +3,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:gravity="center">
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <Button
+        android:id="@+id/expand_shrink_btn"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="LinearLayoutManager">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:text="Expand --- Shirnk"/>
+    <Button
+        android:id="@+id/expand_only_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expand Only"/>
+    <Button
+        android:id="@+id/text_overflow_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Text OverFlow Span"/>
+    <Button
+        android:id="@+id/drawable_overflow_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Drawable OverFlow Span"/>
+    <Button
+        android:id="@+id/composite_configuration_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Composite Configureation"/>
+
+    <Button
+        android:id="@+id/recyclerview_demo_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remember State Demo In RecyclerView"/>
 
 </LinearLayout>

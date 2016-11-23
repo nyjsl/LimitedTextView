@@ -7,7 +7,6 @@ import android.text.TextPaint;
 import android.text.style.ImageSpan;
 
 import org.nyjsl.limitedtextview.ClickImpl;
-import org.nyjsl.limitedtextview.LimitedTextView;
 import org.nyjsl.limitedtextview.interfaces.SpannableInterface;
 
 public class ImageClickableSpan extends ImageSpan implements SpannableInterface {
@@ -18,18 +17,15 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
 
     private ClickImpl clickable = null;
 
-    private LimitedTextView ltv = null;
-
     private int mOverflowDrawableTextColor = 0;
     private int mOverflowDrawableExtraPadding = 0;
     private int mOverflowDrawableTextSize = 0;
 
-    public ImageClickableSpan(int mOverflowDrawableTextColor,int mOverflowDrawableExtraPadding,int mOverflowDrawableTextSize,LimitedTextView ltv,Drawable d, int mode) {
+    public ImageClickableSpan(int mOverflowDrawableTextColor,int mOverflowDrawableExtraPadding,int mOverflowDrawableTextSize,Drawable d, int mode) {
         super(d);
         this.mOverflowDrawableExtraPadding = mOverflowDrawableExtraPadding;
         this.mOverflowDrawableTextColor = mOverflowDrawableTextColor;
         this.mOverflowDrawableTextSize = mOverflowDrawableTextSize;
-        this.ltv = ltv;
         clickable = getClickable(mode);
     }
 
@@ -40,19 +36,53 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
-        int lenBigger = Math.round(ltv.getPaint().measureText(text, start, end));
-        final int lineHeightBigger = ltv.getLineHeight();
-        getDrawable().setBounds(0, 0, lenBigger+ mOverflowDrawableExtraPadding *2, lineHeightBigger);
-        super.draw(canvas, text, start, end, x, top, y, bottom, paint);
+        float bgX = x - (mOverflowDrawableExtraPadding * 0.5F); //使得在水平方向居中
+        int bgBottom = bottom + mOverflowDrawableExtraPadding / 2;//使得在垂直方向居中
+
+        int width =  getWidth(text, start, end, paint);
+        int hight = getHeight(paint);
+        getDrawable().setBounds(0, 0, width, hight);
+        super.draw(canvas, text, start, end, bgX, top, y, bgBottom, paint);
 
         TextPaint smaller = new TextPaint();
         smaller = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         smaller.setColor(mOverflowDrawableTextColor);
         smaller.setTextSize(mOverflowDrawableTextSize);
         final int lenSmaller = Math.round(smaller.measureText(text, start, end));
-        final int startOffset = (lenBigger - lenSmaller)/2 + mOverflowDrawableExtraPadding;
-        canvas.drawText(text.subSequence(start, end).toString(), x+startOffset, y, smaller);
+        final int startOffset = (width - lenSmaller)/2;
+        //need temp here otherwise infinit loop
+        final String textTemp = text.toString();
+        canvas.drawText(textTemp.subSequence(start, end).toString(),x+startOffset, y, smaller);
     }
+
+    @Override
+    public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
+        return getWidth(text, start, end, paint);
+    }
+
+    /**
+     * 计算span的宽度
+     * @param text
+     * @param start
+     * @param end
+     * @param paint
+     * @return
+     */
+    private int getWidth(CharSequence text, int start, int end, Paint paint) {
+        return Math.round(paint.measureText(text, start, end)) + mOverflowDrawableExtraPadding;
+    }
+
+    /**
+     * 计算span的高度
+     * @param paint
+     * @return
+     */
+    private int getHeight(Paint paint) {
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        return (int) Math.ceil(fm.descent - fm.ascent) + mOverflowDrawableExtraPadding;
+    }
+
+
 
     @Override
     public ClickImpl getClickable(int mode) {

@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:shrink_expand_mode="both"
-        app:overflow_drawable_textSize="15sp"
         android:textSize="16sp"
         app:overflow_drawable_textColor="#aaa"
         app:maxlinesonshrink="4"

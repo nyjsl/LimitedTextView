@@ -8,7 +8,7 @@ apply plugin: 'com.jfrog.bintray'
 
 android {
 
-    resourcePrefix "wx" //随意填写
+//    resourcePrefix "wx" //随意填写
 
     compileSdkVersion 21
     buildToolsVersion "25.0.0"
@@ -37,7 +37,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
 }
 
-version = "1.0.7"
+version = "1.0.9"
 group = "org.nyjsl.limitedtextview"
 // 根节点添加
 def siteUrl = 'https://github.com/nyjsl/LimitedTextView'    // project homepage
