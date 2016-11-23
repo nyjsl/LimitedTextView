@@ -30,7 +30,7 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
         this.mOverflowDrawableTextColor = mOverflowDrawableTextColor;
         this.mOverflowDrawableTextSize = mOverflowDrawableTextSize;
         this.ltv = ltv;
-        clickable = getClickable(0,mode);
+        clickable = getClickable(mode);
     }
 
     @Override
@@ -55,7 +55,14 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
     }
 
     @Override
-    public ClickImpl getClickable(int status, int mode) {
-        return new ClickImpl(status,mode);
+    public ClickImpl getClickable(int mode) {
+        return null == clickable? new ClickImpl(STATE_SHRINK,mode) : clickable;
+    }
+
+    @Override
+    public void setClickableSteate(int state) {
+        if(null != clickable){
+            clickable.setmCurrState(state);
+        }
     }
 }

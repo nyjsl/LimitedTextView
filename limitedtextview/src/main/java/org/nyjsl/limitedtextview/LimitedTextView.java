@@ -273,6 +273,7 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
     public void updateForRecyclerView(CharSequence text, int futureTextViewWidth, int expandState){
         mFutureTextViewWidth = futureTextViewWidth;
         mCurrState = expandState;
+        spannable.setClickableSteate(mCurrState);
         setText(text);
     }
 

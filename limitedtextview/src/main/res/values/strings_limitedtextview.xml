@@ -3,5 +3,5 @@
     <string name="overflow_string_default">&#8230;</string>
     <string name="ellipsis_hint_string_default">&#8230;</string>
     <string name="toexpandhint_string_default">展开</string>
-    <string name="mtoshrinkhint_string_default">收起</string>
+    <string name="toshrinkhint_string_default">收起</string>
 </resources>

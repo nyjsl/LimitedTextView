@@ -9,9 +9,6 @@ import org.nyjsl.limitedtextview.interfaces.SpannableInterface;
 
 public class TextClickableSpan extends ClickableSpan implements SpannableInterface {
 
-    private static final int STATE_SHRINK = 0;
-    private static final int STATE_EXPAND = 1;
-
     private boolean mIsPressed;
     public void setPressed(boolean isSelected) {
         mIsPressed = isSelected;
@@ -25,7 +22,7 @@ public class TextClickableSpan extends ClickableSpan implements SpannableInterfa
     private ClickImpl clickable  = null;
 
     public TextClickableSpan(int mode,int mToExpandHintColor, int mToShrinkHintColor, int mToExpandHintColorBgPressed, int mToShrinkHintColorBgPressed) {
-        clickable = getClickable(0,mode);
+        clickable = getClickable(mode);
         this.mToExpandHintColor = mToExpandHintColor;
         this.mToShrinkHintColor = mToShrinkHintColor;
         this.mToExpandHintColorBgPressed = mToExpandHintColorBgPressed;
@@ -57,7 +54,14 @@ public class TextClickableSpan extends ClickableSpan implements SpannableInterfa
 
 
     @Override
-    public ClickImpl getClickable(int status, int mode) {
-        return new ClickImpl(status,mode);
+    public ClickImpl getClickable(int mode) {
+        return null == clickable? new ClickImpl(STATE_SHRINK,mode) : clickable;
+    }
+
+    @Override
+    public void setClickableSteate(int state) {
+        if(null != clickable){
+            clickable.setmCurrState(state);
+        }
     }
 }

@@ -18,6 +18,10 @@ public class ClickImpl implements Clickable {
         this.mode = mode;
     }
 
+    public void setmCurrState(int mCurrState) {
+        this.mCurrState = mCurrState;
+    }
+
     protected int mCurrState = 0;
 
     protected int mode = 0;

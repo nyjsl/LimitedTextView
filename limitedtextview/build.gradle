@@ -10,12 +10,12 @@ android {
 
     resourcePrefix "wx" //随意填写
 
-    compileSdkVersion 24
+    compileSdkVersion 21
     buildToolsVersion "25.0.0"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 24
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
 
@@ -34,10 +34,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:24.+'
+    compile 'com.android.support:appcompat-v7:21.0.3'
 }
 
-version = "1.0.4"
+version = "1.0.7"
 group = "org.nyjsl.limitedtextview"
 // 根节点添加
 def siteUrl = 'https://github.com/nyjsl/LimitedTextView'    // project homepage
@@ -105,7 +105,6 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-
 
 
 Properties properties = new Properties()
