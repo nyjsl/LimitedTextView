@@ -37,28 +37,28 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         float bgX = x - (mOverflowDrawableExtraPadding * 0.5F); //使得在水平方向居中
-        int bgBottom = bottom + mOverflowDrawableExtraPadding / 2;//使得在垂直方向居中
-
         int width =  getWidth(text, start, end, paint);
         int hight = getHeight(paint);
         getDrawable().setBounds(0, 0, width, hight);
-        super.draw(canvas, text, start, end, bgX, top, y, bgBottom, paint);
-
+        super.draw(canvas, text, start, end, bgX, top, y, bottom, paint);
         TextPaint smaller = new TextPaint();
         smaller = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         smaller.setColor(mOverflowDrawableTextColor);
         smaller.setTextSize(mOverflowDrawableTextSize);
         final int lenSmaller = Math.round(smaller.measureText(text, start, end));
-        final int startOffset = (width - lenSmaller)/2;
+        final int xOffset = (int) ((width - lenSmaller)/2 - mOverflowDrawableExtraPadding * 0.5F);
+        final int heightSmaller = getHeight(smaller);
+        final int yOffSet = (hight - heightSmaller)/8;
         //need temp here otherwise infinit loop
         final String textTemp = text.toString();
-        canvas.drawText(textTemp.subSequence(start, end).toString(),x+startOffset, y, smaller);
+        canvas.drawText(textTemp.subSequence(start, end).toString(),x+xOffset, y-yOffSet, smaller);
     }
 
     @Override
     public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
         return getWidth(text, start, end, paint);
     }
+
 
     /**
      * 计算span的宽度
@@ -69,7 +69,7 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
      * @return
      */
     private int getWidth(CharSequence text, int start, int end, Paint paint) {
-        return Math.round(paint.measureText(text, start, end)) + mOverflowDrawableExtraPadding;
+        return Math.round(paint.measureText(text, start, end)) + mOverflowDrawableExtraPadding*2;
     }
 
     /**
@@ -79,7 +79,7 @@ public class ImageClickableSpan extends ImageSpan implements SpannableInterface 
      */
     private int getHeight(Paint paint) {
         Paint.FontMetrics fm = paint.getFontMetrics();
-        return (int) Math.ceil(fm.descent - fm.ascent) + mOverflowDrawableExtraPadding;
+        return (int) Math.ceil(fm.descent - fm.ascent);
     }
 
 

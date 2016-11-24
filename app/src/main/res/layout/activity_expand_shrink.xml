@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.nyjsl.limitedtextview.LimitedTextView
@@ -19,5 +18,7 @@
         android:layout_height="wrap_content"
         android:text="@string/my_own_sword_man"
         app:overflow_mode="drawable"
+        app:overflow_drawable_extrapadding = "4dp"
+        android:textSize = "15sp"
         />
 </LinearLayout>
