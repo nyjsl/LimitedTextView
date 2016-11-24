@@ -2,12 +2,12 @@
 <resources>
     <declare-styleable name="LimitedTextView">
 
-        <attr name="overflow_str" format="reference|integer|string"/>
-        <attr name="overflow_len" format="integer"/>
-        <attr name="ellipsis_hint_str" format="reference|integer|string"/>
-        <attr name="toexpandhint_str" format="reference|integer|string"/>
-        <attr name="toshrinkhint_str" format="reference|integer|string"/>
-        <attr name="maxlinesonshrink" format="integer"/>
+        <attr name="overflow_str" format="reference|integer|string"/><!-- hint for text overflows-->
+        <attr name="overflow_len" format="integer"/>  <!-- maxlength-->
+        <attr name="ellipsis_hint_str" format="reference|integer|string"/> <!-- hint for text shrinks-->
+        <attr name="toexpandhint_str" format="reference|integer|string"/>  <!-- hint for text  to expand-->
+        <attr name="toshrinkhint_str" format="reference|integer|string"/>  <!-- hint for text  to shrink-->
+        <attr name="maxlinesonshrink" format="integer"/>  <!-- max line to shink-->
 
         <attr name="toExpandHintColor" format="reference|color" />
         <attr name="toShrinkHintColor" format="reference|color" />
@@ -19,20 +19,19 @@
         <attr name="overflow_drawable_extrapadding" format="dimension" />
 
         <attr name="limited_mode" format="enum">
-            <enum name="no" value="0"/> <!--不限制长度-->
-            <enum name="yes" value="1"/> <!--限制长度-->
+            <enum name="no" value="0"/>
+            <enum name="yes" value="1"/>
         </attr>
 
         <attr name="shrink_expand_mode" format="enum">
-            <enum name="none" value="0"/> <!--不处理-->
-            <enum name="expand_only" value="1"/> <!--超过长度后收缩,点击展开后展开,展开后不能收缩-->
-            <enum name="both" value="2"/> <!--超过长度后收缩,点击展开后展开,展开后点击收起收起-->
+            <enum name="none" value="0"/>
+            <enum name="expand_only" value="1"/> <!-- can only expand -->
+            <enum name="both" value="2"/>
         </attr>
 
         <attr name = "overflow_mode" format="enum">
-            <enum name="text" value="0"/> <!--不处理-->
-            <enum name="drawable" value="1"/> <!--超过长度后收缩,点击展开后展开,展开后不能收缩-->
-
+            <enum name="text" value="0"/>
+            <enum name="drawable" value="1"/>
         </attr>
     </declare-styleable>
 
