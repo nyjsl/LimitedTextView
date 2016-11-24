@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/my_own_sword_man"
-        />
+        app:shrink_expand_mode="expand_only"/>
     <org.nyjsl.limitedtextview.LimitedTextView
         android:layout_marginTop="30dp"
         android:layout_width="match_parent"
@@ -20,5 +20,5 @@
         app:overflow_mode="drawable"
         app:overflow_drawable_extrapadding = "2dp"
         android:textSize = "16sp"
-        />
+        app:shrink_expand_mode="expand_only"/>
 </LinearLayout>

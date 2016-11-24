@@ -19,9 +19,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.expand_shrink_btn).setOnClickListener(this);
         findViewById(R.id.expand_only_btn).setOnClickListener(this);
-        findViewById(R.id.text_overflow_btn).setOnClickListener(this);
-        findViewById(R.id.drawable_overflow_btn).setOnClickListener(this);
-        findViewById(R.id.composite_configuration_btn).setOnClickListener(this);
         findViewById(R.id.recyclerview_demo_btn).setOnClickListener(this);
     }
 
@@ -32,12 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this,ExpandShirkActivity.class));
                 break;
             case R.id.expand_only_btn:
-                break;
-            case R.id.text_overflow_btn:
-                break;
-            case R.id.drawable_overflow_btn:
-                break;
-            case R.id.composite_configuration_btn:
+                startActivity(new Intent(MainActivity.this,ExpandOnlyActivity.class));
                 break;
             case R.id.recyclerview_demo_btn:
                 startActivity(new Intent(MainActivity.this,RecyclerViewActivity.class));
