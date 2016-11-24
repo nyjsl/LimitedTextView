@@ -8,7 +8,7 @@ use Spannable text or drawble as overflow button
 
 > [download demo project for custom configurations](https://github.com/nyjsl/LimitedTextView.git)
 
-## avaliable via jcetner ##
+## avaliable via jcenter ##
 
 <pre>
  repositories {
