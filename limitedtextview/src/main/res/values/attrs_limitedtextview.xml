@@ -26,7 +26,9 @@
         <attr name="shrink_expand_mode" format="enum">
             <enum name="none" value="0"/>
             <enum name="expand_only" value="1"/> <!-- can only expand -->
-            <enum name="both" value="2"/>
+            <enum name="shrink_only" value="2"/>
+            <enum name="both" value="3"/>
+
         </attr>
 
         <attr name = "overflow_mode" format="enum">

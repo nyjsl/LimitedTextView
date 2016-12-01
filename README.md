@@ -16,5 +16,5 @@ use Spannable text or drawble as overflow button
 }
 </pre>
 <pre>
- compile 'org.nyjsl.limitedtextview:limitedtextview:1.1.0'
+ compile 'org.nyjsl.limitedtextview:limitedtextview:1.1.1'
 </pre>

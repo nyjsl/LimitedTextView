@@ -37,8 +37,11 @@ public class ClickImpl implements Clickable {
         }
         switch (mCurrState){
             case STATE_SHRINK:
-                mCurrState = STATE_EXPAND;
+                if(mode == EXPAND_SHRINK_ONLY){
+                    break;
+                }
                 if(view instanceof Expandable){
+                    mCurrState = STATE_EXPAND;
                     Expandable exp = (Expandable) view;
                     exp.onExpand(view);
                 }

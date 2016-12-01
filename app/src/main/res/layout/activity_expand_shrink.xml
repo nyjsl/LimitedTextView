@@ -8,9 +8,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.nyjsl.limitedtextview.LimitedTextView
+        android:id="@+id/tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/my_own_sword_man"
+        app:shrink_expand_mode = "shrink_only"
         />
     <org.nyjsl.limitedtextview.LimitedTextView
         android:layout_marginTop="30dp"

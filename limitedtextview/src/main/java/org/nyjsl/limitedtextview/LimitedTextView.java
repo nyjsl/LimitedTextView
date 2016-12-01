@@ -39,7 +39,8 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
 
     private static final int SHRINK_EXPAND_NONE = 0;
     private static final int SHRINK_EXPAND_EXPAND_ONLY = 1;
-    private static final int SHRINK_EXPAND_BOTH = 2;
+    private static final int SHRINK_EXPAND_SHRINK_ONLY = 2;
+    private static final int SHRINK_EXPAND_BOTH = 3;
 
     private BufferType mBufferType = BufferType.NORMAL;
     private TextPaint mTextPaint = null;
@@ -287,6 +288,8 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
         }else if(mShrinkExpandMode == SHRINK_EXPAND_BOTH){
             return getNewTextByConfig();
         }else if(mShrinkExpandMode == SHRINK_EXPAND_EXPAND_ONLY){
+            return getNewTextByConfig();
+        }else if(mShrinkExpandMode == SHRINK_EXPAND_SHRINK_ONLY){
             return getNewTextByConfig();
         }else{
             return mOrigText;
