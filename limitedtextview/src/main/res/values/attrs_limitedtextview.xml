@@ -23,6 +23,8 @@
             <enum name="yes" value="1"/>
         </attr>
 
+        <attr name="show_overflow_str" format="boolean"/>
+
         <attr name="shrink_expand_mode" format="enum">
             <enum name="none" value="0"/>
             <enum name="expand_only" value="1"/> <!-- can only expand -->

@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.text.DynamicLayout;
-import android.text.InputFilter;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -64,7 +63,6 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
 
     private String overFlowStr = "";
     private int overFlowLength = 0;
-    private LengthInputFilter lengthFilter;
 
     private int mToExpandHintColor = 0xFF3498DB;
     private int mToShrinkHintColor = 0xFFE74C3C;
@@ -108,6 +106,7 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
     }
 
     private int mLimitMode = 0;
+    private boolean mShow_overflow_str = false;
     private int mShrinkExpandMode = 0;
     private SpannableInterface spannable = null;
 
@@ -135,8 +134,6 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         readStyle(context, attrs, defStyleAttr, defStyleRes);
         readAttrs(context, attrs, defStyleAttr, defStyleRes);
-        setLengthFilter(mLimitMode);
-
         if(mOverflowMode == OVERFLOW_MODE_TEXT){
             spannable = new TextClickableSpan(mShrinkExpandMode,mToExpandHintColor,mToShrinkHintColor,mToExpandHintColorBgPressed,mToShrinkHintColorBgPressed);
             linkMovementMethod = new TextTouchLinkMovementMethod();
@@ -195,6 +192,8 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
             int attr = a.getIndex(i);
             if(attr == R.styleable.LimitedTextView_overflow_len){
                 overFlowLength = a.getInt(attr,0);
+            }else if(attr == R.styleable.LimitedTextView_show_overflow_str){
+                mShow_overflow_str =  a.getBoolean(attr,false);
             }else if (attr == R.styleable.LimitedTextView_overflow_str){
                 overFlowStr = a.getString(attr);
             }else if (attr == R.styleable.LimitedTextView_ellipsis_hint_str){
@@ -237,26 +236,23 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
     }
 
     /**
-     *设置是否限制长度
-     * @param mode LIMIT_MODE_YES  LIMIT_MODE_NO
+     *根据长度截取字符串
      */
-    public void setLengthFilter(int mode){
-        mLimitMode = mode;
+    public void filterText(){
         if(mLimitMode == LIMIT_MODE_YES){
             if(overFlowLength>0){
                 if(TextUtils.isEmpty(overFlowStr)){
                     overFlowStr = getContext().getString(R.string.overflow_string_default);
                 }
-                lengthFilter = new LengthInputFilter(overFlowLength,overFlowStr);
-                this.setFilters(new InputFilter[]{lengthFilter});
+                if(mOrigText.length()>overFlowLength){
+                    mOrigText = mOrigText.subSequence(0,overFlowLength);
+                    if(mShow_overflow_str){
+                        mOrigText = mOrigText+overFlowStr;
+                    }
+                }
 
             }
-        }else if (mLimitMode == LIMIT_MODE_NO){
-            this.setFilters(new InputFilter[0]);
-        }else{
-            return;
         }
-        setText(mOrigText);
     }
 
 
@@ -267,6 +263,7 @@ public class LimitedTextView extends TextView implements Expandable,Toggable {
     @Override
     public void setText(CharSequence text, BufferType type) {
         mOrigText = text;
+        filterText();
         mBufferType = type;
         setTextInternal(getShirkOrExpandTextByConfig(),type);
     }
