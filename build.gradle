@@ -25,3 +25,8 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext{
+    user = "nyjsl"
+    apikey = "4c2fdf688393d049a1a54dd30709b09c741e842c"
+}
