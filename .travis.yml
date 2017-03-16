@@ -21,3 +21,10 @@ android:
 
 before_install:
   - chmod +x gradlew  #gradlew permission access for travis
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: 13693bf122427b45e88e740f9a534dbac03f48c2 # Set in travis-ci.org dashboard
+  on:
+    branch: master
