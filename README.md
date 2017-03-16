@@ -3,6 +3,7 @@
 
 [ ![Download](https://api.bintray.com/packages/nyjsl/maven/limitedtextview/images/download.svg) ](https://bintray.com/nyjsl/maven/limitedtextview/_latestVersion)
 [![Build Status](https://travis-ci.org/nyjsl/LimitedTextView.svg?branch=master)](https://travis-ci.org/nyjsl/LimitedTextView)
+
 ![demo](demo.gif)
 
 > Support maxLength Click to Expand and Shrink
